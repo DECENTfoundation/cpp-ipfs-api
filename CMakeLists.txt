@@ -39,6 +39,12 @@ add_library(${IPFS_API_LIBNAME}
   src/client.cc
   src/http/transport-curl.cc
 )
+
+target_include_directories(${IPFS_API_LIBNAME}
+	INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+	INTERFACE "$<INSTALL_INTERFACE:include>")
+
+	
 set_target_properties(${IPFS_API_LIBNAME} PROPERTIES
   SOVERSION ${PROJECT_VERSION_MAJOR}
   VERSION ${PROJECT_VERSION}
