@@ -589,6 +589,8 @@ class Client {
       /** [out] The retrieved list. */
       Json* peers);
 
+  void BitswapLedger( const std::string& peer, Json* stats );
+
  private:
   /** Fetch any URL that returns JSON and parse it into `response`. */
   void FetchAndParseJson(

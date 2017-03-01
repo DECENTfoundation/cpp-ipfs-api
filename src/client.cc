@@ -363,6 +363,10 @@ void Client::SwarmPeers(Json* peers) {
   FetchAndParseJson(MakeUrl("swarm/peers"), peers);
 }
 
+void Client::BitswapLedger( const std::string& peer, Json* stats ) {
+  FetchAndParseJson(MakeUrl("bitswap/ledger", {{"arg", peer}}), stats);
+}
+
 void Client::FetchAndParseJson(const std::string& url, Json* response) {
   FetchAndParseJson(url, {}, response);
 }
