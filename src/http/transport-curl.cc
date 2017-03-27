@@ -104,6 +104,8 @@ void TransportCurl::Fetch(const std::string& url,
 
   /* https://curl.haxx.se/libcurl/c/CURLOPT_POST.html */
   curl_easy_setopt(curl_, CURLOPT_POST, 1);
+  curl_easy_setopt(curl_, CURLOPT_LOW_SPEED_LIMIT, 1);
+  curl_easy_setopt(curl_, CURLOPT_LOW_SPEED_TIME, 30);
 
   curl_httppost* form_parts = NULL;
   curl_httppost* form_parts_end = NULL;
