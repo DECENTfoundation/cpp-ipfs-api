@@ -315,8 +315,8 @@ void Client::PinAdd(const std::string& object_id) {
   Json pins_array;
   GetProperty(response, "Pins", 0, &pins_array);
 
-  for (const std::string& pin : pins_array) {
-    if (pin == object_id) {
+  for (const auto& pin : pins_array) {
+    if (pin["/"] == object_id) {
       return;
     }
   }
