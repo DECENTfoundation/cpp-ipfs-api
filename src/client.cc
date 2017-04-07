@@ -255,6 +255,16 @@ void Client::ObjectLinks(const std::string& object_id, Json* links) {
   GetProperty(response, "Links", 0, links);
 }
 
+
+void Client::Ls(const std::string& object_id, Json* objects) {
+  Json response;
+
+  FetchAndParseJson(MakeUrl("ls", {{"arg", object_id}}), &response);
+
+  GetProperty(response, "Objects", 0, objects);
+}
+
+
 void Client::ObjectStat(const std::string& object_id, Json* stat) {
   FetchAndParseJson(MakeUrl("object/stat", {{"arg", object_id}}), stat);
 }
