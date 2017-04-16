@@ -326,7 +326,7 @@ void Client::PinAdd(const std::string& object_id) {
   GetProperty(response, "Pins", 0, &pins_array);
 
   for (const auto& pin : pins_array) {
-    if (pin["/"] == object_id) {
+     if (pin.get<std::string>() == object_id) {
       return;
     }
   }
