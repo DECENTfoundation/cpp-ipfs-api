@@ -326,9 +326,20 @@ void Client::PinAdd(const std::string& object_id) {
   GetProperty(response, "Pins", 0, &pins_array);
 
   for (const auto& pin : pins_array) {
-     if (pin.get<std::string>() == object_id) {
-      return;
-    }
+     
+     if (pin.is_object()) {
+        
+        if (pin["/"] == object_id) {
+           return;
+        }
+        
+     } else {
+        
+        if (pin.get<std::string>() == object_id) {
+           return;
+        }
+        
+     }
   }
 
   throw std::runtime_error(
