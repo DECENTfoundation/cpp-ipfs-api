@@ -108,7 +108,7 @@ void TransportCurl::Fetch(const std::string& url,
   curl_easy_setopt(curl_, CURLOPT_LOW_SPEED_LIMIT, 1);
   curl_easy_setopt(curl_, CURLOPT_LOW_SPEED_TIME, 1800);
   curl_easy_setopt(curl_, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-  curl_easy_setopt(curl_, CURLOPT_VERBOSE, true);
+  //curl_easy_setopt(curl_, CURLOPT_VERBOSE, true);
 
   curl_httppost* form_parts = NULL;
   curl_httppost* form_parts_end = NULL;
