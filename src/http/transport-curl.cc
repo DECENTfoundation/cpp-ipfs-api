@@ -97,6 +97,7 @@ TransportCurl::TransportCurl() : curl_is_setup_(false) {
 
 TransportCurl::~TransportCurl() { HandleDestroy(); }
 
+
 void TransportCurl::Fetch(const std::string& url,
                           const std::vector<FileUpload>& files,
                           std::iostream* response) {
@@ -104,6 +105,10 @@ void TransportCurl::Fetch(const std::string& url,
 
   /* https://curl.haxx.se/libcurl/c/CURLOPT_POST.html */
   curl_easy_setopt(curl_, CURLOPT_POST, 1);
+  curl_easy_setopt(curl_, CURLOPT_LOW_SPEED_LIMIT, 1);
+  curl_easy_setopt(curl_, CURLOPT_LOW_SPEED_TIME, 1800);
+  curl_easy_setopt(curl_, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+  //curl_easy_setopt(curl_, CURLOPT_VERBOSE, true);
 
   curl_httppost* form_parts = NULL;
   curl_httppost* form_parts_end = NULL;

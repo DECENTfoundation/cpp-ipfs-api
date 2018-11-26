@@ -165,7 +165,7 @@ void Client::FilesAdd(const std::vector<http::FileUpload>& files,
                       Json* result) {
   std::stringstream body;
 
-  http_->Fetch(MakeUrl("add", {{"progress", "true"}}), files, &body);
+  http_->Fetch(MakeUrl("add", {{"recursive","true"},{"silent","true"}}), files, &body);
 
   /* The reply consists of multiple lines, each one of which is a JSON, for
   example:
@@ -194,15 +194,28 @@ void Client::FilesAdd(const std::vector<http::FileUpload>& files,
   Json temp;
 
   std::string line;
-  for (size_t i = 1; std::getline(body, line); ++i) {
+  while( std::getline(body, line) ){
+    std::cerr << line <<"\n";
     Json json_chunk;
+    ParseJson(line, &json_chunk);
 
+    std::string path;
+    if( (json_chunk.find("Name") != json_chunk.end()) && (json_chunk.find("Hash") != json_chunk.end()) ) {
+      temp[ "path" ] = json_chunk[ "Name" ];
+      temp[ "hash" ] = json_chunk[ "Hash" ];
+      result->push_back( temp );
+    }
+  }
+
+  /*for (size_t i = 1; std::getline(body, line); ++i) {
+    Json json_chunk;
+    std::cerr << line <<"\n";
     ParseJson(line, &json_chunk);
 
     std::string path;
     GetProperty(json_chunk, "Name", i, &path);
 
-    temp[path]["path"] = path;
+    temp["path"] = path;
 
     static const char* hash = "Hash";
     if (json_chunk.find(hash) != json_chunk.end()) {
@@ -217,7 +230,7 @@ void Client::FilesAdd(const std::vector<http::FileUpload>& files,
 
   for (Json::iterator it = temp.begin(); it != temp.end(); ++it) {
     result->push_back(it.value());
-  }
+  }*/
 }
 
 void Client::FilesLs(const std::string& path, Json* json) {
@@ -258,6 +271,16 @@ void Client::ObjectLinks(const std::string& object_id, Json* links) {
 
   GetProperty(response, "Links", 0, links);
 }
+
+
+void Client::Ls(const std::string& object_id, Json* objects) {
+  Json response;
+
+  FetchAndParseJson(MakeUrl("ls", {{"arg", object_id}}), &response);
+
+  GetProperty(response, "Objects", 0, objects);
+}
+
 
 void Client::ObjectStat(const std::string& object_id, Json* stat) {
   FetchAndParseJson(MakeUrl("object/stat", {{"arg", object_id}}), stat);
@@ -319,10 +342,21 @@ void Client::PinAdd(const std::string& object_id) {
   Json pins_array;
   GetProperty(response, "Pins", 0, &pins_array);
 
-  for (const std::string& pin : pins_array) {
-    if (pin == object_id) {
-      return;
-    }
+  for (const auto& pin : pins_array) {
+     
+     if (pin.is_object()) {
+        
+        if (pin["/"] == object_id) {
+           return;
+        }
+        
+     } else {
+        
+        if (pin.get<std::string>() == object_id) {
+           return;
+        }
+        
+     }
   }
 
   throw std::runtime_error(

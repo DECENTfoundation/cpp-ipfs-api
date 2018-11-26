@@ -397,6 +397,23 @@ class Client {
        * [{"Name": "...", "Hash": "...", "Size": 8}, ...] */
       Json* links);
 
+  /** List links from an object
+   *
+   *
+   * An example usage:
+   * @snippet object.cc ipfs::Client::ObjectLinks
+   *
+   * @throw std::exception if any error occurs
+   *
+   * @since version 0.1.1-DECENT */
+  void Ls(
+      /**  [in] Id of the object to query (multihash). */
+      const std::string& object_id,
+      /** [out] Links of the object. For example:
+       * [{"Name": "...", "Hash": "...", "Size": 8, "Type": 1}, ...] */
+      Json* objects);
+
+
   /** Get stats about a MerkleDAG node.
    *
    * Implements
