@@ -25,14 +25,7 @@ find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
 
 # Find "JSON for Modern C++" (nlohmann/json.hpp)
-find_path(JSON_FOR_MODERN_CXX_INCLUDE_DIR NAMES nlohmann/json.hpp)
-mark_as_advanced(JSON_FOR_MODERN_CXX_INCLUDE_DIR)
-if(NOT JSON_FOR_MODERN_CXX_INCLUDE_DIR)
-  message(FATAL_ERROR "JSON for Modern C++ (nlohmann/json.hpp) not found. Go fetch it from https://github.com/nlohmann/json/blob/develop/src/json.hpp and tell CMake where it is: 'cmake -DJSON_FOR_MODERN_CXX_INCLUDE_DIR:PATH=/path/to/include' (assuming the file is in /path/to/include/nlohmann/json.hpp)")
-endif()
-include_directories(${JSON_FOR_MODERN_CXX_INCLUDE_DIR})
-
-include_directories("include")
+find_package(nlohmann_json REQUIRED)
 
 # Targets
 
@@ -46,11 +39,10 @@ add_library(${IPFS_API_LIBNAME}
   src/http/transport-curl.cc
 )
 
-target_include_directories(${IPFS_API_LIBNAME}
-	INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-	INTERFACE "$<INSTALL_INTERFACE:include>")
+target_include_directories(${IPFS_API_LIBNAME} PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
 
-	
 set_target_properties(${IPFS_API_LIBNAME} PROPERTIES
   SOVERSION ${PROJECT_VERSION_MAJOR}
   VERSION ${PROJECT_VERSION}
