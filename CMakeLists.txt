@@ -22,7 +22,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Find curl
 find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIRS})
 
 # Find "JSON for Modern C++" (nlohmann/json.hpp)
 find_package(nlohmann_json REQUIRED)
@@ -39,15 +38,16 @@ add_library(${IPFS_API_LIBNAME}
   src/http/transport-curl.cc
 )
 
-target_include_directories(${IPFS_API_LIBNAME} PUBLIC
+target_include_directories(${IPFS_API_LIBNAME} PRIVATE ${CURL_INCLUDE_DIRS} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include>")
+
+target_link_libraries(${IPFS_API_LIBNAME} INTERFACE nlohmann_json::nlohmann_json PRIVATE ${CURL_LIBRARIES})
 
 set_target_properties(${IPFS_API_LIBNAME} PROPERTIES
   SOVERSION ${PROJECT_VERSION_MAJOR}
   VERSION ${PROJECT_VERSION}
 )
-target_link_libraries(${IPFS_API_LIBNAME} ${CURL_LIBRARIES})
 
 install(TARGETS ${IPFS_API_LIBNAME} DESTINATION lib)
 install(FILES include/ipfs/client.h DESTINATION include/ipfs)
