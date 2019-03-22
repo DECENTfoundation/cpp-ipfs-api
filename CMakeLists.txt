@@ -12,11 +12,6 @@ project(cpp-ipfs-api VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add compiler warnings
-if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Wextra -Werror")
-endif()
-
 # Generate compile_commands.json, to be used by YouCompleteMe.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -37,6 +32,11 @@ add_library(${IPFS_API_LIBNAME}
   src/client.cc
   src/http/transport-curl.cc
 )
+
+# Add compiler options
+if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(${IPFS_API_LIBNAME} PRIVATE -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wpedantic -Wextra -Werror)
+endif()
 
 target_include_directories(${IPFS_API_LIBNAME} PRIVATE ${CURL_INCLUDE_DIRS} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
