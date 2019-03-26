@@ -42,7 +42,7 @@ target_include_directories(${IPFS_API_LIBNAME} PRIVATE ${CURL_INCLUDE_DIRS} PUBL
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include>")
 
-target_link_libraries(${IPFS_API_LIBNAME} INTERFACE nlohmann_json::nlohmann_json PRIVATE ${CURL_LIBRARIES})
+target_link_libraries(${IPFS_API_LIBNAME} PRIVATE ${CURL_LIBRARIES} PUBLIC nlohmann_json::nlohmann_json)
 
 set_target_properties(${IPFS_API_LIBNAME} PROPERTIES
   SOVERSION ${PROJECT_VERSION_MAJOR}
